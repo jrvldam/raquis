@@ -1,0 +1,100 @@
+{% block rutinas %}
+	<div class="tab-pane fade" id="rutinas">
+		<div class="panel panel-default">
+			<div class="panel-heading">rutinas</div>
+			<div class="panel-body">
+				<div class="well col-md-5 ejerWell">
+					<div class="row text-center">
+						<button type="button" class="btn btn-default" id="nuevoRut">nueva</button>
+						<button type="button" class="btn btn-default" id="editarRut">editar</button>
+						<input type="text" id="cajaRut" placeholder="nombre paciente" class="toHide">
+						<button  type="button" id="btnFindRut" class="toHide btn btn-info" disabled="true"><span class="glyphicon glyphicon-search"></span></button>
+					</div>
+					<hr>
+					<form class="toHide form" id="formRut" enctype="multipart/form-data" novalidate>
+						<div class="row" id="inputRut">
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button" disabled>
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<textarea class="form-control" placeholder="observaciones" aria-label="observaciones" required></textarea> 
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button">
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<input type="number" class="form-control" placeholder="orden" aria-label="orden" required>
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button">
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<input type="text" class="form-control" placeholder="usuario" aria-label="usuario" required>
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button">
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<input type="text" class="form-control" placeholder="ejercicio" aria-label="ejercicio" required>
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button">
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<input type="number" class="form-control" placeholder="repeticiones" aria-label="repeticiones" required>
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button">
+										<span class="glyphicon glyphicon-question-sign"></span>
+									</button>
+								</span>
+								<input type="number" class="form-control" placeholder="tiempo en segundos" aria-label="tiempo" required>
+							</div>
+						</div>
+						<hr>
+						<div class="text-center">
+							<button type="button" class="btn btn-default" id="guardarRut">guardar</button>
+						</div>
+					</form>
+				</div>
+				<div class="well col-md-7 ejerWell" style="overflow:auto;">
+					<table class="table table-striped" id="tablaRut">
+						<thead>
+							<tr>
+								<th>orden</th>
+								<th>observaciones</th>
+								<th>usuario</th>
+								<th>ejercicio</th>
+								<th>repeticiones</th>
+								<th>tiempo</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for rutina in rutinas %}
+						<tr>
+							<td>{{ rutina.orden }}</td>
+							<td>{{ rutina.obser }}</td>
+							<td>{{ rutina.usuario }}</td>
+							<td>{{ rutina.ejercicio }}</td>
+							<td>{{ rutina.repe }}</td>
+							<td>{{ rutina.tiempo }}</td>
+						</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
