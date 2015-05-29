@@ -9,8 +9,6 @@ $(document).ready(function()
 {
 	var action = NO_ACTION;
 
-	$(".btn-group").button();
-
 	$('#nuevo').click(function()
 	{
 		action = INSERT;
@@ -122,47 +120,40 @@ $(document).ready(function()
 	$("#editarEjer").click(function()
 	{
 		action = UPDATE;
-		var inputs = clearInputs("#usuInput > div > input");
+		var inputs = clearInputs("#inputEjer > div > input");
 		inputs.attr('onblur', 'checkInputs(this);');
-		$("#cajaUsu").toggle().focus().keyup(function()
+		$("#cajaEjer").toggle().focus().keyup(function()
 		{
-			if($('#cajaUsu').val().length > 0)
+			if($('#cajaEjer').val().length > 0)
 			{
-				$('#btnFind').removeAttr('disabled');
+				$('#btnFindEjer').removeAttr('disabled');
 			}
 			else
 			{
-				$('#btnFind').attr('disabled','true');
+				$('#btnFindEjer').attr('disabled','true');
 			}
 		});
-		$('#btnFind').toggle().click(function()
+		$('#btnFindEjer').toggle().click(function()
 		{
-			var nomUsu = $.trim($("#cajaUsu").val());
-			if(nomUsu)
+			var nomEjer = $.trim($("#cajaEjer").val());
+			if(nomEjer)
 			{
-				$.getJSON('/getUsuario?nombre=' + nomUsu, function(usuario)
+				$.getJSON('/adminEjer?nombre=' + nomEjer, function(ejercicio)
 				{
-					if(usuario.error)
+					if(ejercicio.error)
 					{
-						alert('No se pudo encontrar el usuario.\nRevise el nombre.');
+						alert('No se pudo encontrar el ejercicio.\nRevise el nombre.');
 					}
 					else
 					{
-						$(inputs[0]).val(usuario.nombre);
-						$(inputs[1]).val(usuario.clave);
-						if(usuario.rol === "usuario")
-						{
-							$("#usuario").addClass("active");
-							$("#admin").removeClass("active");
-						}
-						else
-						{
-							$("#admin").addClass("active");
-							$("#usuario").removeClass("active");
-						}
+						$(inputs[0]).val(ejercicio.nombre);
+						$(inputs[1]).val(ejercicio.descripcion);
+						$(inputs[2]).val(ejercicio.tipo);
+						$(inputs[3]).val(ejercicio.imagen);
 						$(inputs).prev('span').children('button').removeClass('btn-warning').addClass('btn-success').children('span').removeClass('glyphicon-question-sign').addClass('glyphicon-ok');
-						$("#cajaUsu").val("").toggle();
-						$('#btnFind').toggle();
+						$("#inputRut > div > span > span > input").parent().removeClass("btn-warning").addClass("btn-success");
+						$("#cajaEjer").val("").toggle();
+						$('#btnFindEjer').toggle();
 					}
 				});
 			}

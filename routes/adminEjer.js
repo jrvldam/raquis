@@ -13,16 +13,23 @@ function validar(req, res, next)
 	}
 }
 
-router.post("/", validar, function(req, res)
+router.get("/", validar, function(req, res)
 {
-	if (req.files)
+	if (req.query.nombre) 
 	{
-		console.log("YO SOY EL FILE: " + JSON.stringify(req.body.fieldname));
+		mDB.getEjer(req.query.nombre, function(err, ejercicio)
+		{
+			res.json(ejercicio);
+		});
 	}
-	else
-	{
-		console.log("pringao");
-	}
+	// else if (req.files)
+	// {
+	// 	console.log("YO SOY EL FILE: " + JSON.stringify(req.body.fieldname));
+	// }
+	// else
+	// {
+	// 	console.log("pringao");
+	// }
 });
 
 module.exports = router;

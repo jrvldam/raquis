@@ -63,17 +63,17 @@ app.use("/adminEjer", adminEjer);
 app.use("/adminRut", adminRut);
 app.use('/error', error);
 
+// MANEJA CUALQUIER OTRA PETICION NO CONTEMPLADA Y LA REDIRIGE A LOGIN
+app.get('*', function(req, res)
+{
+	res.redirect('/login');
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
-});
-
-// MANEJA CUALQUIER OTRA PETICION NO CONTEMPLADA Y LA REDIRIGE A LOGIN
-app.get('*', function(req, res)
-{
-	res.redirect('/login');
 });
 
 // error handlers
