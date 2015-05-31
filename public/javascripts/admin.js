@@ -1,6 +1,7 @@
 "strict mode";
 var usuario = {};
 var ejercicio = {};
+var rutina = {};
 var NO_ACTION = 0;
 var UPDATE = 1;
 var INSERT = 2;
@@ -12,9 +13,8 @@ $(document).ready(function()
 	$('#nuevo').click(function()
 	{
 		action = INSERT;
+		$("#findUsu").attr("hidden", "true");
 		var inputs = nuevo($("#usuInput > div > input"), $("#formUsu"));
-		$("#cajaUsu").val("").addClass("toHide");
-		$("#btnFind").addClass("toHide");
 		$("#usuario").addClass("active"); // propia de usuario
 		$("#admin").removeClass("active"); // propia de usuario
 		usuario = undefined; // propia de usuario
@@ -23,7 +23,7 @@ $(document).ready(function()
 			"clave": "",
 			"rol": ""
 		};
-		$(inputs).attr('onblur', 'checkInputs(this);');
+		// $(inputs).attr('onblur', 'checkInputs(this);');
 	});
 
 	$('#editar').click(function()
@@ -31,7 +31,8 @@ $(document).ready(function()
 		action = UPDATE;
 		var inputs = clearInputs("#usuInput > div > input");
 		inputs.attr('onblur', 'checkInputs(this);');
-		$("#cajaUsu").toggle().focus().keyup(function()
+		$("#findUsu").toggle();
+		$("#cajaUsu").focus().keyup(function()
 		{
 			if($('#cajaUsu').val().length > 0)
 			{
@@ -42,7 +43,7 @@ $(document).ready(function()
 				$('#btnFind').attr('disabled','true');
 			}
 		});
-		$('#btnFind').toggle().click(function()
+		$('#btnFind').click(function()
 		{
 			var nomUsu = $.trim($("#cajaUsu").val());
 			if(nomUsu)
@@ -69,8 +70,8 @@ $(document).ready(function()
 							$("#usuario").removeClass("active");
 						}
 						$(inputs).prev('span').children('button').removeClass('btn-warning').addClass('btn-success').children('span').removeClass('glyphicon-question-sign').addClass('glyphicon-ok');
-						$("#cajaUsu").val("").toggle();
-						$('#btnFind').toggle();
+						$("#cajaUsu").val("");
+						$('#findUsu').attr("hidden", "true");
 					}
 				});
 			}
@@ -119,7 +120,7 @@ $(document).ready(function()
 			"imagen": "",
 			"tipo": ""
 		};
-		$(inputs).attr('onblur', 'checkInputs(this);');
+		// $(inputs).attr('onblur', 'checkInputs(this);');
 	});
 
 	$("#editarEjer").click(function()
@@ -195,11 +196,93 @@ $(document).ready(function()
 			alert("No se ha seleccionado nuevo/editar");
 		}
 	});
+
+	// $("#nuevaRut").click(function()
+	// {
+	// 	action = INSERT;
+		
+		
+	// 	var inputs = nuevo($("#inputRut > div > input"), $("#formRut"));
+	// 	$("#inputRut > div > textarea").val("").attr('onblur', 'checkInputs(this);');
+	// 	rutina = undefined;
+	// 	rutina = {
+	// 		"obser": "",
+	// 		"orden": "",
+	// 		"usuario": "",
+	// 		"ejer": "",
+	// 		"repe": "",
+	// 		"tiempo":""
+	// 	};
+	// });
 });
+
+function findNec()
+{
+	$("#findRut").removeAttr("hidden");
+	$("#cajaRutPaci").focus().keyup(function()
+	{
+		if($('#cajaRutPaci').val().length > 0)
+		{
+			$('#btnFindRutPaci').removeAttr('disabled');
+		}
+		else
+		{
+			$('#btnFindRutPaci').attr('disabled','true');
+		}
+	});
+	$("#btnFindRutPaci").click(function()
+	{
+		var nomUsu = $.trim($("#cajaRutPaci").val());
+		if(nomUsu)
+		{
+			$.getJSON('/getDoc?usuario=' + nomUsu, function(usuario)
+			{
+				if(usuario.error)
+				{
+					alert('No se pudo encontrar el usuario.\nRevise el nombre.');
+				}
+				else
+				{
+					// REFRESHTABLE DEL USUARIO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					$("#cajaRutEjer").focus().keyup(function()
+					{
+						if($('#cajaRutEjer').val().length > 0)
+						{
+							$('#btnFindRutEjer').removeAttr('disabled');
+						}
+						else
+						{
+							$('#btnFindRutEjer').attr('disabled','true');
+						}
+					});
+					$('#btnFindRutEjer').click(function()
+					{
+						var nomEjer = $.trim($("#cajaRutEjer").val());
+						if(nomEjer)
+						{
+							$.getJSON('/getDoc?ejercicio=' + nomEjer, function(ejercicio)
+							{
+								if(ejercicio.error)
+								{
+									alert('No se pudo encontrar el ejercicio.\nRevise el nombre.');
+								}
+								else
+								{
+									// CARGO LA INFORMACION PARA MOSTRARLA 
+									// O BIEN MUESTRO LOS INPUTS A RELLENAR CON LA INFORMACION DE LA NUEVA RUTINA.
+									// PARA GUARDAR IGUAL NO HACE FALTA CONFIRMAR USUARIO Y EJERCICIO.
+								}
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+}
 
 function guardar(url, datos, callback)
 {
-    // e.preventDefault();
     $.ajax({ method: "POST", url: url, data: datos })
     .fail(function()
     {
@@ -257,15 +340,6 @@ function clearInputs(inputs)
 	return $(inputs);
 }
 
-// function completeHandler()
-// {
-// 	alert("yuuuuuu!!");
-// }
-// function errorHandler()
-// {
-// 	alert("pringao!!!");
-// }
-
 // function validateFile()
 // {
 // 	$(':file').change(function(){
@@ -279,18 +353,3 @@ function clearInputs(inputs)
 // 
 // 
 // 
-	// $("#nuevoRut").click(function()
-	// {
-	// 	action = INSERT;
-	// 	nuevo($("#cajaRut"), $("#btnFindRut"), $("#inputRut > div > input"), $("#formRut"));
-	// 	$("#inputRut > div > textarea").attr('onblur', 'checkInputs(this);');
-	// 	rutinaNueva = undefined;
-	// 	rutinaNueva = {
-	// 		"obser": "",
-	// 		"orden": "",
-	// 		"usuario": "",
-	// 		"ejer": "",
-	// 		"repe": "",
-	// 		"tiempo":""
-	// 	};
-	// });

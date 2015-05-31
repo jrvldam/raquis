@@ -3,15 +3,40 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">rutinas</div>
 			<div class="panel-body">
-				<div class="well col-md-5 ejerWell">
+				<div class="well col-md-6 rutWell">
 					<div class="row text-center">
-						<button type="button" class="btn btn-default" id="nuevoRut">nueva</button>
+						<button type="button" class="btn btn-default" id="nuevaRut">nueva</button>
 						<button type="button" class="btn btn-default" id="editarRut">editar</button>
-						<input type="text" id="cajaRut" placeholder="nombre paciente" class="toHide">
-						<button  type="button" id="btnFindRut" class="toHide btn btn-info" disabled="true"><span class="glyphicon glyphicon-search"></span></button>
+						<hr>
+						<div id="findRut" class="col-md-6 col-md-offset-3">
+							{# <input type="text" id="cajaRutPaci" placeholder="nombre paciente">
+							<button  type="button" id="btnFindRutPaci" class="btn btn-info" disabled="true">
+								<span class="glyphicon glyphicon-search"></span>
+							</button> #}
+							{# <input type="text" id="cajaRutEjer" placeholder="nombre ejercicio">
+							<button  type="button" id="btnFindRutEjer" class="btn btn-info" disabled="true">
+								<span class="glyphicon glyphicon-search"></span>
+							</button> #}
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="nombre paciente" aria-describedby="btnFindRutEjer" id="cajaRutPaci">
+								<span class="input-group-btn">
+							    	<button class="btn btn-info" type="button" id="btnFindRutPaci" disabled>
+							    		<span class="glyphicon glyphicon-search"></span>
+							    	</button>
+								</span>
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="nombre ejercicio" aria-describedby="btnFindRutEjer" id="cajaRutEjer">
+								<span class="input-group-btn">
+							    	<button class="btn btn-info" type="button" id="btnFindRutEjer" disabled>
+							    		<span class="glyphicon glyphicon-search"></span>
+							    	</button>
+								</span>
+							</div>
+						</div>
 					</div>
 					<hr>
-					<form class="toHide form" id="formRut" enctype="multipart/form-data" novalidate>
+					<form class="toHide form" id="formRut" novalidate>
 						<div class="row" id="inputRut">
 							<div class="input-group">
 								<span class="input-group-btn">
@@ -68,16 +93,16 @@
 						</div>
 					</form>
 				</div>
-				<div class="well col-md-7 ejerWell" style="overflow:auto;">
+				<div class="well col-md-6 rutWell" style="overflow:auto;">
 					<table class="table table-striped" id="tablaRut">
+						<caption id="capRut"></caption>
 						<thead>
 							<tr>
 								<th>orden</th>
 								<th>observaciones</th>
-								<th>usuario</th>
 								<th>ejercicio</th>
-								<th>repeticiones</th>
-								<th>tiempo</th>
+								<th>r/</th>
+								<th>t/</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,7 +110,6 @@
 						<tr>
 							<td>{{ rutina.orden }}</td>
 							<td>{{ rutina.obser }}</td>
-							<td>{{ rutina.usuario }}</td>
 							<td>{{ rutina.ejercicio }}</td>
 							<td>{{ rutina.repe }}</td>
 							<td>{{ rutina.tiempo }}</td>

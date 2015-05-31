@@ -7,8 +7,12 @@
 					<div class="row text-center">
 						<button type="button" class="btn btn-default" id="nuevo">nuevo</button>
 						<button type="button" class="btn btn-default" id="editar">editar</button>
-						<input type="text" id="cajaUsu" placeholder="nombre usuario" class="toHide">
-						<button  type="button" id="btnFind" class="toHide btn btn-info" disabled="true"><span class="glyphicon glyphicon-search"></span></button>
+						<span id="findUsu" hidden>
+							<input type="text" id="cajaUsu" placeholder="nombre usuario" >
+							<button  type="button" id="btnFind" class="btn btn-info" disabled>
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
 					</div>
 					<hr>
 					<form class="toHide form" id="formUsu" novalidate>

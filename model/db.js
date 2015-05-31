@@ -52,7 +52,12 @@ function getEjer(nomEjer, callback)
 		});
 	});
 }
-
+/**
+ * Actualiza los atributosd el ejercicio indicado
+ * @param {Object}   ejercicio ejercicio a actualizar
+ * @param {Function} callback  (err, result)
+ * @return {Funtion}			callback
+ */
 function setEjer(ejercicio, callback)
 {
 	mdbClient.connect(uri, function(err, db)
@@ -76,6 +81,34 @@ function setEjer(ejercicio, callback)
 			else
 			{
 				return callback(null, "El ejercicio no exsiste");
+			}
+		});
+	});
+}
+
+function addEjer(ejercicio, callback)
+{
+	mdbClient.connect(uri, function(err, db)
+	{
+		if (err) { return console.dir(err); }
+
+		var ejercicios = db.collection("ejercicios");
+		ejercicios.findOne({ nombre: ejercicio.nombre }, function(err, _ejercicio)
+		{
+			if (err) { return console.dir(err); }
+
+			if (_ejercicio) 
+			{
+				return callback(null, "El ejercicio ya exsiste.");
+			}
+			else
+			{
+				ejercicios.insertOne(ejercicio, {w:1}, function(err, recorded)
+				{
+					if (err) {return console.dir(err);}
+
+					return callback(null, recorded);
+				});
 			}
 		});
 	});
@@ -277,6 +310,7 @@ function qLogin (nomLogin, claveLogin, callback)
 exports.getRutinasAdmin = getRutinasAdmin;
 exports.getEjer = getEjer;
 exports.setEjer = setEjer;
+exports.addEjer = addEjer;
 exports.getAllEjer = getAllEjer;
 exports.getUsuario = getUsuario;
 exports.addUsuario = addUsuario;
