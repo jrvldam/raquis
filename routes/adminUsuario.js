@@ -16,17 +16,16 @@ function validar(req, res, next)
 router.post("/", validar, function(req, res)
 {
 	var usuario = JSON.parse(req.body.usuario);
-	var action = parseInt(req.body.action);
-	if (usuario && action) 
+	if (usuario && req.query.action) 
 	{
-		if (action === 1) 
+		if (req.query.action === "1") 
 		{
 			mDB.setUsuario(usuario, function(err, result)
 			{
 				res.send(result);
 			});
 		}
-		else if (action === 2) 
+		else if (req.query.action === "2") 
 		{
 			mDB.addUsuario(usuario, function(err, result)
 			{

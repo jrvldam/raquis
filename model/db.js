@@ -25,26 +25,11 @@ function getRutinasAdmin (usuario, callback)
 	});
 }
 /**
- * [Devuleve la collecion de usuarios en la base de datos]
- * @param  {Function} callback [(null,usuarios)]
- * @return {Function} callback
+ * Devuelve un ejercicio
+ * @param  {String}   nomEjer  Nombre del ejercicio
+ * @param  {Function} callback (err, callback)
+ * @return {Function}            callback
  */
-function getAllUsuarios (callback) 
-{
-	mdbClient.connect(uri, function (err, db) 
-	{
-		if (err) { return console.dir(err); }
-
-		var usuarios = db.collection('usuarios');
-		usuarios.find({}).sort({ "nombre": 1 }).toArray(function (err, _usuarios) 
-		{
-			if (err) { return console.dir(err); }
-
-			return callback(null, _usuarios);
-		});
-	});
-}
-
 function getEjer(nomEjer, callback)
 {
 	mdbClient.connect(uri, function(err, db)
@@ -63,6 +48,34 @@ function getEjer(nomEjer, callback)
 			else
 			{
 				return callback(err, { error: true });
+			}
+		});
+	});
+}
+
+function setEjer(ejercicio, callback)
+{
+	mdbClient.connect(uri, function(err, db)
+	{
+		if (err) { return console.dir(err); }
+
+		var ejercicios = db.collection("ejercicios");
+		ejercicios.findOne({ nombre: ejercicio.nombre }, function(err, _ejercicio)
+		{
+			if (err) { return console.dir(err); }
+
+			if (_ejercicio) 
+			{
+				ejercicios.update({ nombre: ejercicio.nombre }, { $set: { descripcion: ejercicio.descripcion, imagen: ejercicio.imagen, tipo: ejercicio.tipo } }, function(err, result)
+				{
+					if (err) { console.dir(err); }
+
+					return callback(null, result);
+				});
+			}
+			else
+			{
+				return callback(null, "El ejercicio no exsiste");
 			}
 		});
 	});
@@ -88,8 +101,11 @@ function getAllEjer(callback)
 	});
 }
 /**
-*
-*/
+ * Devuelve el usuario
+ * @param  {String}   nombre   Nombre del usuario
+ * @param  {Function} callback (err, callback)
+ * @return {Function}            callback
+ */
 function getUsuario (nombre, callback) 
 {
 	mdbClient.connect(uri, function (err, db) 
@@ -113,9 +129,9 @@ function getUsuario (nombre, callback)
 	});
 }
 /**
- * [Guarda un usuario nuevo si el nombre no se encuentra en BD]
- * @param {object} usuario [usuario nuevo]
- * @param {Function} callback [(err, mensaje)]
+ * Guarda un usuario nuevo si el nombre no se encuentra en BD
+ * @param {object} usuario Usuario nuevo
+ * @param {Function} callback (err, mensaje)
  * @return {Function} callback
  */
 function addUsuario (usuario, callback)
@@ -134,7 +150,7 @@ function addUsuario (usuario, callback)
 					if (err) { return console.dir(err); }
 
 					db.close();
-					return callback(err, recorded.insertedCount + " usuario nuevo.");
+					return callback(err, recorded); // .insertedCount + " usuario nuevo.");
 				});
 			}
 			else
@@ -146,18 +162,18 @@ function addUsuario (usuario, callback)
 	});
 }
 /**
- * [Actualiza el usuario si exdiste]
- * @param {[type]}   usario   [objeto usuario]
- * @param {Function} callback [(err, resultadoDelUpdate)]
+ * Actualiza el usuario si exdiste
+ * @param {Object}   usario   objeto usuario
+ * @param {Function} callback (err, resultadoDelUpdate)
  */
-function setUsuario(usario, callback)
+function setUsuario(usuario, callback)
 {
 	mdbClient.connect(uri, function(err, db)
 	{
 		if (err) { return console.dir(err); }
 
-		var usuarios = db.collecion("usuarios");
-		usarios.findOne({ nombre: usuario.nombre }, function(err, _usuario)
+		var usuarios = db.collection("usuarios");
+		usuarios.findOne({ nombre: usuario.nombre }, function(err, _usuario)
 		{
 			if (err) { return console.dir(err); }
 
@@ -172,14 +188,37 @@ function setUsuario(usario, callback)
 			}
 			else
 			{
-				return callback(err, "El usuario no existe.");
+				return callback(null, "El usuario no existe.");
 			}
 		});
 	});
 }
 /**
-*
-*/
+ * Devuleve la collecion de usuarios en la base de datos
+ * @param  {Function} callback (null,usuarios)
+ * @return {Function} callback
+ */
+function getAllUsuarios (callback) 
+{
+	mdbClient.connect(uri, function (err, db) 
+	{
+		if (err) { return console.dir(err); }
+
+		var usuarios = db.collection('usuarios');
+		usuarios.find({}).sort({ "nombre": 1 }).toArray(function (err, _usuarios) 
+		{
+			if (err) { return console.dir(err); }
+
+			return callback(null, _usuarios);
+		});
+	});
+}
+/**
+ * Devuelve todas las rutinas asignadas al usuario
+ * @param  {String}   usuario  Nombre del usuario
+ * @param  {Function} callback (err, callback)
+ * @return {Function}            callback
+ */
 function getRutinasUsuario (usuario, callback)
 {
 	var rutinas = {};
@@ -216,31 +255,32 @@ function getRutinasUsuario (usuario, callback)
 /**
 *
 */
-function qLogin (nomLogin, callback)
+function qLogin (nomLogin, claveLogin, callback)
 {
 	mdbClient.connect(uri, function(err, db)
 	{
 		if (err) { return console.dir(err); }
-		console.log('conexion mDB 0k!');
 		
 		var collection = db.collection('usuarios');
 
 		// collection.insert(objeto, {w:1}, function(err, result) {});
 		
-		collection.findOne({nombre: nomLogin}, function(err, item)
+		collection.findOne({nombre: nomLogin, clave: claveLogin }, function(err, item)
 		{
 			if (err) { return console.dir(err); }
+
 			return callback(err, item);
 		});
 	});
 }
 
 exports.getRutinasAdmin = getRutinasAdmin;
-exports.getAllUsuarios = getAllUsuarios;
 exports.getEjer = getEjer;
+exports.setEjer = setEjer;
 exports.getAllEjer = getAllEjer;
 exports.getUsuario = getUsuario;
 exports.addUsuario = addUsuario;
 exports.setUsuario = setUsuario;
+exports.getAllUsuarios = getAllUsuarios;
 exports.getRutinasUsuario = getRutinasUsuario;
 exports.qLogin = qLogin;

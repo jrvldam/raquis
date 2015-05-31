@@ -3,8 +3,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">usuarios</div>
 			<div class="panel-body">
-				<form class="form" novalidate>
-					<div class="well col-md-6 usuWell">
+				<div class="well col-md-6 usuWell">
 					<div class="row text-center">
 						<button type="button" class="btn btn-default" id="nuevo">nuevo</button>
 						<button type="button" class="btn btn-default" id="editar">editar</button>
@@ -12,41 +11,36 @@
 						<button  type="button" id="btnFind" class="toHide btn btn-info" disabled="true"><span class="glyphicon glyphicon-search"></span></button>
 					</div>
 					<hr>
-					<div class="row" id="usuInput">
-						<div class="input-group">
-							<span class="input-group-btn">
-								<button class="btn btn-warning" type="button"><span class="glyphicon glyphicon-question-sign"></span></button>
-							</span>
-							<input type="text" class="form-control" placeholder="nombre" aria-label="nombre" required>
+					<form class="toHide form" id="formUsu" novalidate>
+						<div class="row" id="usuInput">
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button"><span class="glyphicon glyphicon-question-sign"></span></button>
+								</span>
+								<input type="text" class="form-control" placeholder="nombre" aria-label="nombre" required>
+							</div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button"><span class="glyphicon glyphicon-question-sign"></span></button>
+								</span>
+								<input type="text" class="form-control" placeholder="clave" aria-label="clave" required>
+							</div>
+							<br>
+							<div class="btn-group col-md-6 col-md-offset-3" data-toggle="buttons" id="rol">
+							    <label class="btn btn-default active" id="usuario">
+									<input name="options" type="radio" value="usuario"> usuario 
+							    </label>
+							    <label class="btn btn-default" id="admin">
+									<input name="options" type="radio" value="admin"> administrador 
+							    </label>
+							</div>
 						</div>
-						<div class="input-group">
-							<span class="input-group-btn">
-								<button class="btn btn-warning" type="button"><span class="glyphicon glyphicon-question-sign"></span></button>
-							</span>
-							<input type="text" class="form-control" placeholder="clave" aria-label="clave" required>
+						<hr>
+						<div class="text-center">
+							<button type="button" class="btn btn-default" id="guardar">guardar</button>
 						</div>
-						{# <div class="input-group">
-							<span class="input-group-btn">
-								<button class="btn btn-warning" type="button"><span class="glyphicon glyphicon-question-sign"></span></button>
-							</span>
-							<input type="text" class="form-control" placeholder="rol (usuario|admin)" aria-label="rol" required>
-						</div> #}
-						<br>
-						<div class="btn-group col-md-6 col-md-offset-3" data-toggle="buttons" id="rol">
-						    <label class="btn btn-default active" id="usuario">
-								<input name="options" type="radio" value="usuario"> usuario 
-						    </label>
-						    <label class="btn btn-default" id="admin">
-								<input name="options" type="radio" value="admin"> administrador 
-						    </label>
-						</div>
-					</div>
-					<hr>
-					<div class="text-center">
-						<button type="button" class="btn btn-default" id="guardar">guardar</button>
-					</div>
+					</form>
 				</div>
-				</form>
 				<div class="well col-md-6 usuWell" style="overflow: auto;">
 					<table class="table table-striped" id="tablaUsuarios">
 						<thead>
