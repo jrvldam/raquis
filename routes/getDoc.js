@@ -15,19 +15,12 @@ function validar(req, res, next)
 
 router.get("/", validar, function(req, res)
 {
-	if (req.query.usuario) 
+	if (req.query.usuario && req.query.ejercicio) 
 	{
-		mDB.getUsuario(req.query.usuario, function(err, usuario)
-		{
-			if (err) 
+		mDB.getRut(req.query.usuario, req.query.ejercicio, function(err, rutina)
 			{
-				res.redirect("error", { error: err });
-			}
-			else
-			{
-				res.json(usuario);
-			}
-		});
+				res.json(rutina);
+			});
 	}
 	else if (req.query.ejercicio) 
 	{
@@ -40,6 +33,20 @@ router.get("/", validar, function(req, res)
 			else
 			{
 				res.json(ejercicio);
+			}
+		});
+	}
+	else if (req.query.usuario) 
+	{
+		mDB.getUsuario(req.query.usuario, function(err, usuario)
+		{
+			if (err) 
+			{
+				res.redirect("error", { error: err });
+			}
+			else
+			{
+				res.json(usuario);
 			}
 		});
 	}

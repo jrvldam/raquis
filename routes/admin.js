@@ -29,9 +29,12 @@ router.get('/', validar, function (req,res)
 			res.json(ejercicios);
 		});
 	}
-	else if (req.query.rutinas) 
+	else if (req.query.rutinas) // LA VARIABLE RUTINAS LLEVA EL NOMBRE DEL USUARIO
 	{
-		// EL GET DE RUTINAS
+		mDB.getAllRut(req.query.rutinas, function(err, rutinas)
+		{
+			res.json(rutinas);
+		});
 	}
 	else
 	{

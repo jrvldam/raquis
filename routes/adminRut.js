@@ -15,16 +15,30 @@ function validar(req, res, next)
 
 router.post("/", validar, function(req, res)
 {
-	if (req.query.guardar) 
+	if (req.body.rutina && req.query.action) 
 	{
-		// GUARDAR LAS RUTINAS DEL USUARIO
+		if (req.query.action === "1") 
+		{
+			mDB.setRut(JSON.parse(req.body.rutina), function(err, result)
+			{
+				res.send(result);
+			});
+		}
+		else if (req.query.action === "2") 
+		{
+			mDB.addRut(JSON.parse(req.body.rutina), function(err, result)
+			{
+				res.send(result);
+			});
+		}
+		else
+		{
+			res.send("No se ha definido que hacer");
+		}
 	}
 	else
 	{
-		mDB.getRutinasUsuario(req.body.usuario, function(err, rutinas)
-		{
-			res.json(rutinas);
-		});
+		res.send("Error en los datos.");
 	}
 });
 

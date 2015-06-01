@@ -148,7 +148,7 @@ $(document).ready(function()
 				{
 					if(ejercicio.error)
 					{
-						alert('No se pudo encontrar el ejercicio.\nRevise el nombre.');
+						alert('No se pudo encontrar el ejercicio.\nPorfavor revise el nombre.');
 					}
 					else
 					{
@@ -197,80 +197,177 @@ $(document).ready(function()
 		}
 	});
 
-	// $("#nuevaRut").click(function()
-	// {
-	// 	action = INSERT;
-		
-		
-	// 	var inputs = nuevo($("#inputRut > div > input"), $("#formRut"));
-	// 	$("#inputRut > div > textarea").val("").attr('onblur', 'checkInputs(this);');
-	// 	rutina = undefined;
-	// 	rutina = {
-	// 		"obser": "",
-	// 		"orden": "",
-	// 		"usuario": "",
-	// 		"ejer": "",
-	// 		"repe": "",
-	// 		"tiempo":""
-	// 	};
-	// });
+	$("#nuevaRut").click(function()
+	{
+		action = INSERT;
+		$("#formRut").addClass("toHide");
+		var findRut = "#findRut";
+		var cajaPaci = "#cajaRutPaci";
+		var btnPaci = "#btnFindRutPaci";
+		var cajaEjer = "#cajaRutEjer";
+		var btnEjer = "#btnFindRutEjer";
+		findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, function(rutina)
+		{
+			console.log("en el findNecesary de nueva");
+			if (rutina.error) 
+			{
+				var inputs = nuevo($("#inputRut > div > input"), $("#formRut"));
+				$(inputs).val("");
+				$("#inputRut > div > textarea").val("").attr('onblur', 'checkInputs(this);');
+				rutina = undefined;
+				rutina = {
+					"obser": "",
+					"orden": "",
+					"usuario": "",
+					"ejer": "",
+					"repe": "",
+					"tiempo": ""
+				};
+				$("#formRut").removeClass("toHide");
+			}
+			else
+			{
+				alert("El paciente ya tiene la rutina asignada.\n Puede editarla.");
+			}
+		});
+	});
+
+	$("#editarRut").click(function()
+	{
+		action = UPDATE;
+		$("#formRut").addClass("toHide");
+		var findRut = "#findRut";
+		var cajaPaci = "#cajaRutPaci";
+		var btnPaci = "#btnFindRutPaci";
+		var cajaEjer = "#cajaRutEjer";
+		var btnEjer = "#btnFindRutEjer";
+		findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, function(rutina)
+		{
+			if (rutina.error) 
+			{
+				alert('No se pudo encontrar la rutina.\nPuede que el usuario no la tenga asignada.');
+			}
+			else
+			{
+				var inputs = nuevo($("#inputRut > div > input"), $("#formRut"));
+				$("#inputRut > div > textarea").val("").attr('onblur', 'checkInputs(this);');
+				$("#inputRut > div > textarea").val(rutina.obser);
+				$(inputs[0]).val(rutina.orden);
+				$(inputs[1]).val(rutina.repe || 0);
+				$(inputs[2]).val(rutina.tiempo || 0);
+				$(inputs).prev('span').children('button').removeClass('btn-warning').addClass('btn-success').children('span').removeClass('glyphicon-question-sign').addClass('glyphicon-ok');
+				$("#formRut").removeClass("toHide");
+			}
+		});
+	});
+
+	$("#guardarRut").click(function()
+	{
+		if (action)
+		{
+			var url = "/adminRut?action=" + action;
+			var inputs = $("#inputRut > div > input");
+			rutina.usuario = $("#cajaRutPaci").val();
+			rutina.ejer = $("#cajaRutEjer").val();
+			rutina.obser = $("#inputRut > div > textarea").val();
+			rutina.orden = $(inputs[0]).val();
+			rutina.repe = $(inputs[1]).val();
+			rutina.tiempo = $(inputs[2]).val();
+			console.log($("#inputRut > div > textarea").val());
+			for (var i = 0; i < inputs.length; i++) 
+			{
+				console.log($(inputs[i]).val());
+			}
+			var cadena = JSON.stringify(rutina);
+			guardar(url, { rutina: cadena }, function(msg)
+			{
+				if (msg.ok === 1) 
+				{
+					refreshRutinas($("#cajaRutPaci").val());
+					alert("Rutina" + ((action === 1)? " actualizada!" : " agregada!"));
+				}
+				else
+				{
+					alert(msg);
+				}
+			});
+		} 
+		else
+		{
+			alert("No se ha seleccionado nuevo/editar");
+		}
+	});
 });
 
-function findNec()
+function findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, callback)
 {
-	$("#findRut").removeAttr("hidden");
-	$("#cajaRutPaci").focus().keyup(function()
+	console.log(action);
+	$(findRut).removeAttr("hidden");
+	$(cajaPaci).removeAttr("disabled").val("");
+	$(cajaEjer).removeAttr("disabled").val("");
+	$(cajaPaci).focus().keyup(function()
 	{
-		if($('#cajaRutPaci').val().length > 0)
+		if($(cajaPaci).val().length > 0)
 		{
-			$('#btnFindRutPaci').removeAttr('disabled');
+			$(btnPaci).removeAttr('disabled');
 		}
 		else
 		{
-			$('#btnFindRutPaci').attr('disabled','true');
+			$(btnPaci).attr('disabled','true');
 		}
 	});
-	$("#btnFindRutPaci").click(function()
+	$(btnPaci).click(function()
 	{
-		var nomUsu = $.trim($("#cajaRutPaci").val());
+		var nomUsu = $.trim($(cajaPaci).val());
 		if(nomUsu)
 		{
-			$.getJSON('/getDoc?usuario=' + nomUsu, function(usuario)
+			$.getJSON('/getDoc?usuario=' + nomUsu, function(_usuario)
 			{
-				if(usuario.error)
+				if(_usuario.error)
 				{
 					alert('No se pudo encontrar el usuario.\nRevise el nombre.');
 				}
 				else
 				{
-					// REFRESHTABLE DEL USUARIO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					$("#cajaRutEjer").focus().keyup(function()
+					$(cajaPaci).attr("disabled", "true"); // BLOQUEA LA CAJA DE PACIENTE
+					refreshRutinas(nomUsu); // CARGA O REFRESCA LA TABLA DE RUTINAS DEL PACIENTE
+					$(cajaEjer).focus().keyup(function()
 					{
-						if($('#cajaRutEjer').val().length > 0)
+						if($(cajaEjer).val().length > 0)
 						{
-							$('#btnFindRutEjer').removeAttr('disabled');
+							$(btnEjer).removeAttr('disabled');
 						}
 						else
 						{
-							$('#btnFindRutEjer').attr('disabled','true');
+							$(btnEjer).attr('disabled','true');
 						}
 					});
-					$('#btnFindRutEjer').click(function()
+					$(btnEjer).click(function()
 					{
-						var nomEjer = $.trim($("#cajaRutEjer").val());
+						var nomEjer = $.trim($(cajaEjer).val());
 						if(nomEjer)
 						{
-							$.getJSON('/getDoc?ejercicio=' + nomEjer, function(ejercicio)
+							$.getJSON('/getDoc?ejercicio=' + nomEjer, function(_ejercicio)
 							{
-								if(ejercicio.error)
+								if(_ejercicio.error)
 								{
 									alert('No se pudo encontrar el ejercicio.\nRevise el nombre.');
 								}
 								else
 								{
-									// CARGO LA INFORMACION PARA MOSTRARLA 
-									// O BIEN MUESTRO LOS INPUTS A RELLENAR CON LA INFORMACION DE LA NUEVA RUTINA.
-									// PARA GUARDAR IGUAL NO HACE FALTA CONFIRMAR USUARIO Y EJERCICIO.
+									$(cajaEjer).attr("disabled", "true"); // BLOQUEA LA CAJA DE EJERCICIO
+
+									$.getJSON("/getDoc?usuario=" + $("#cajaRutPaci").val() + "&ejercicio=" + $("#cajaRutEjer").val(), function(rutina)
+									{
+										if (action === 1) 
+										{
+											return callback(rutina);
+										}
+										else if (action === 2)
+										{
+											return callback(rutina);
+										}
+									});
 								}
 							});
 						}
@@ -310,6 +407,27 @@ function refreshTable(uri, tBody)
 				}
 			}
 			$(tBody).append(tr);
+		}
+	});
+}
+
+function refreshRutinas(nomUsu)
+{
+	$.getJSON("/admin?rutinas=" + nomUsu + "&ts" + $.now(), function(rutinas)
+	{
+		$("#tablaRut tbody").empty();
+
+		for (var rutina in rutinas)
+		{
+			var tr = $("<tr></tr>");
+			
+			tr.append($("<td></td>").text(rutinas[rutina].orden));
+			tr.append($("<td></td>").text(rutinas[rutina].obser));
+			tr.append($("<td></td>").text(rutinas[rutina].ejer));
+			tr.append($("<td></td>").text(rutinas[rutina].repe));
+			tr.append($("<td></td>").text(rutinas[rutina].tiempo));
+
+			$("#tablaRut tbody").append(tr);
 		}
 	});
 }

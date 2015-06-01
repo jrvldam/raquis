@@ -3,24 +3,117 @@ var async = require('async');
 
 var uri = 'mongodb://admin:admin@ds039321.mongolab.com:39321/raquis_db';
 /**
- * Devuelve las ruitnas del usuario
- * @param  {string}   usuario  nombre del usuario
- * @param  {Function} callback (err, rutinas)
- * @return {Function}            callbak
+ * Asigna una nueva rutina de un ejercicio al paciente
+ * @param {Object}   rutina   Contiene: usuario, ejer, obser, orden, repe y tiempo
+ * @param {Function} callback (err, result)
+ * @return {Function} callback o err
  */
-function getRutinasAdmin (usuario, callback)
+function addRut(rutina, callback)
 {
-	var rutinas = {};
 	mdbClient.connect(uri, function(err, db)
 	{
 		if (err) { return console.dir(err); }
 
-		var collection = db.collection('rutinas');
-		collection.find({usuario: usuario}).sort({ orden: 1}).toArray(function(err, rutinas)
+		var rutinas = db.collection("rutinas");
+		rutinas.findOne({ usuario: rutina.usuario, ejer: rutina.ejer }, function(err, _rutina)
 		{
 			if (err) { return console.dir(err); }
 
-			return callback(err, rutinas);
+			if (_rutina) 
+			{
+				return callback(null, "El paciente ya tiene la rutina asignada.\n Puede editarla.");
+			}
+			else
+			{
+				rutinas.insertOne(rutina, {w:1}, function(err, result)
+				{
+					if (err) { return console.dir(err); }
+
+					return callback(null, result);
+				});
+			}
+		});
+	});
+}
+/**
+ * Actualiza la rutina del paciente
+ * @param {Object}   rutina   contiene: usuario, ejer y las actualizaciones
+ * @param {Function} callback (err, callback)
+ * @return{Function} callback
+ */
+function setRut(rutina, callback)
+{
+	mdbClient.connect(uri, function(err, db)
+	{
+		if (err) { return console.dir(err); }
+
+		var rutinas = db.collection("rutinas");
+		rutinas.findOne({ usuario: rutina.usuario, ejer: rutina.ejer }, function(err, _rutina)
+		{
+			if (err) { return console.dir(err); }
+
+			if (_rutina) 
+			{
+				rutinas.update({ usuario: rutina.usuario, ejer: rutina.ejer }, { $set: { orden: rutina.orden, obser: rutina.obser, repe: rutina.repe, tiempo: rutina.tiempo }}, function(err, result)
+				{
+					if (err) { console.dir(err); }
+
+					return callback(null, result);
+				});
+			}
+			else
+			{
+				return callback(null, "La rutina no esta asignada");
+			}
+		});
+	});
+}
+/**
+ * Devuelve la rutina del ejercicio asignado al paciente
+ * @param  {String}   nomUsu   nombre del paciente
+ * @param  {String}   nomEjer  nombre del ejercicio
+ * @param  {Function} callback (err, callback)
+ * @return {Function}            callback
+ */
+function getRut(nomUsu, nomEjer, callback)
+{
+	mdbClient.connect(uri, function(err, db)
+	{
+		if (err) { return console.dir(err); }
+
+		var rutinas = db.collection("rutinas");
+		rutinas.findOne({"usuario": nomUsu, "ejer": nomEjer}, function(err, rutina)
+		{
+			if (err) { return console.dir(err); }
+			if (rutina) 
+			{
+				return callback(null, rutina);
+			}
+			else
+			{
+				return callback(null, { error:true });
+			}
+		});
+	});
+}
+/**
+ * Devuelve todas las ruitnas del usuario
+ * @param  {string}   usuario  nombre del usuario
+ * @param  {Function} callback (err, rutinas)
+ * @return {Function}            callbak
+ */
+function getAllRut(usuario, callback)
+{
+	mdbClient.connect(uri, function(err, db)
+	{
+		if (err) { return console.dir(err); }
+
+		var rutinas = db.collection('rutinas');
+		rutinas.find({usuario: usuario}).sort({ orden: 1}).toArray(function(err, rutinas)
+		{
+			if (err) { return console.dir(err); }
+
+			return callback(null, rutinas);
 		});
 	});
 }
@@ -196,7 +289,7 @@ function addUsuario (usuario, callback)
 }
 /**
  * Actualiza el usuario si exdiste
- * @param {Object}   usario   objeto usuario
+ * @param {Object}   usuario   objeto usuario
  * @param {Function} callback (err, resultadoDelUpdate)
  */
 function setUsuario(usuario, callback)
@@ -307,7 +400,10 @@ function qLogin (nomLogin, claveLogin, callback)
 	});
 }
 
-exports.getRutinasAdmin = getRutinasAdmin;
+exports.addRut = addRut;
+exports.setRut = setRut;
+exports.getRut = getRut;
+exports.getAllRut = getAllRut;
 exports.getEjer = getEjer;
 exports.setEjer = setEjer;
 exports.addEjer = addEjer;
