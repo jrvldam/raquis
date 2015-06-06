@@ -367,6 +367,10 @@ function findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, cal
 										{
 											return callback(rutina);
 										}
+										else
+										{
+											alert("ERROR EN EL EL RETORNO DEL GET-JSONDESPUES DE USUARIO...");
+										}
 									});
 								}
 							});
