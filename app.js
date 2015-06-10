@@ -13,6 +13,7 @@ var adminUsuario = require('./routes/adminUsuario');
 var adminEjer = require("./routes/adminEjer");
 var adminRut = require("./routes/adminRut");
 var error = require('./routes/error');
+var logout = require('./routes/logout');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.use("/getDoc", getDoc);
 app.use("/adminUsuario", adminUsuario);
 app.use("/adminEjer", adminEjer);
 app.use("/adminRut", adminRut);
+app.use('/logout', logout);
 app.use('/error', error);
 
 // MANEJA CUALQUIER OTRA PETICION NO CONTEMPLADA Y LA REDIRIGE A LOGIN

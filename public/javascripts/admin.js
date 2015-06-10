@@ -316,6 +316,7 @@ function findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, cal
 			$(btnPaci).attr('disabled','true');
 		}
 	});
+
 	$(btnPaci).click(function()
 	{
 		var nomUsu = $.trim($(cajaPaci).val());
@@ -331,6 +332,7 @@ function findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, cal
 				{
 					$(cajaPaci).attr("disabled", "true"); // BLOQUEA LA CAJA DE PACIENTE
 					refreshRutinas(nomUsu); // CARGA O REFRESCA LA TABLA DE RUTINAS DEL PACIENTE
+					
 					$(cajaEjer).focus().keyup(function()
 					{
 						if($(cajaEjer).val().length > 0)
