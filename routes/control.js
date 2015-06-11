@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.post('/', function(req, res)
 {
-	var expReg = /[^\$:;%&#@!,|/\\()<>?^\.]/g;
+	var expReg = /[^\$:;%&#@!,|/ª=º\[\]{}\\()\+<>*"'?\^]/g;
 	if (expReg.test(req.body.nombre) && expReg.test(req.body.clave)) 
 	{
 		mDB.qLogin(req.body.nombre, req.body.clave, function(err, item)

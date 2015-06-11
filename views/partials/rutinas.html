@@ -44,7 +44,7 @@
 										<span class="glyphicon glyphicon-question-sign"></span>
 									</button>
 								</span>
-								<input type="number" class="form-control" placeholder="orden" aria-label="orden" required>
+								<input type="number" class="form-control" placeholder="orden" onkeypress="return soloNumeros(event);" aria-label="orden" required>
 							</div>
 							<div class="input-group">
 								<span class="input-group-btn">
@@ -52,7 +52,7 @@
 										<span class="glyphicon glyphicon-question-sign"></span>
 									</button>
 								</span>
-								<input type="number" class="form-control" placeholder="repeticiones" aria-label="repeticiones" required>
+								<input type="number" class="form-control" placeholder="repeticiones" onkeypress="return soloNumeros(event);"  aria-label="repeticiones" required>
 							</div>
 							<div class="input-group">
 								<span class="input-group-btn">
@@ -60,7 +60,7 @@
 										<span class="glyphicon glyphicon-question-sign"></span>
 									</button>
 								</span>
-								<input type="number" class="form-control" placeholder="tiempo en segundos" aria-label="tiempo" required>
+								<input type="number" class="form-control" placeholder="tiempo en segundos" onkeypress="return soloNumeros(event);" aria-label="tiempo" required>
 							</div>
 						</div>
 						<hr>

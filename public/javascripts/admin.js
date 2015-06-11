@@ -299,6 +299,31 @@ $(document).ready(function()
 	});
 });
 
+function soloNumeros(e)
+{
+	var valor = (e.charCode);
+	if ((valor > 47 && valor < 58) || valor === 0) 
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function valName(e)
+{
+	if (/[^\$:;%&#@!,|/ª=º\[\]{}\\()\+<>*"'?\^]/g.test(String.fromCharCode(e.charCode))) 
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 function findNecesary(action, findRut, cajaPaci, btnPaci, cajaEjer, btnEjer, callback)
 {
 	console.log(action);
