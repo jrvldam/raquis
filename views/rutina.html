@@ -56,19 +56,17 @@
 					{% for rutina in rutinas %}
 					<div class="tab-pane fade{% if loop.first %} in active{% endif %}" id="{{ rutina.nombre }}">
 						<div class="row">
-							<img src="./images/{% if rutina.imagen %}{{ rutina.imagen }}{% else %}pill00.gif{% endif %}" class="img-rounded img-responsive center-block" alt="imagen {{ rutina.nombre }}" width="250px">
+							<img src="./images/{% if rutina.imagen %}{{ rutina.imagen }}{% else %}noImage.png{% endif %}" class="img-rounded img-responsive center-block" alt="imagen {{ rutina.nombre }}" width="250px">
 						</div>
 						<br>
-				    	{# <div class="row"> #}
-		    		    	<div class="panel panel-success  {#  col-xs-12 #}  ">
-		    		    		<div class="panel-heading">
-		    		    			{{ rutina.nombre | capitalize }}
-		    		    		</div>
-		    		    		<div class="panel-body">
-		    			    		<p>{{ rutina.descripcion }}</p>
-		    			    		<p>{{ rutina.obser }}</p>
-		    		    		</div>
-		    		    	{# </div> #}
+		    		    <div class="panel panel-success  {#  col-xs-12 #}  ">
+	    		    		<div class="panel-heading">
+	    		    			{{ rutina.nombre | capitalize }}
+	    		    		</div>
+	    		    		<div class="panel-body">
+	    			    		<p>{{ rutina.descripcion }}</p>
+	    			    		<p>{{ rutina.obser }}</p>
+	    		    		</div>
 				    	</div>
 
 				    	{% if rutina.tiempo > 0 %}
@@ -82,9 +80,12 @@
 							    <hr>
 							</div>
 						{% elseif rutina.repe > 0 %}
-							<div class="input-group">
-								<label for="repe"></label>
-								<input type="number" size="2" maxlength="2" id="repe{{ rutina.nombre }}" name="repe" class="form-control">
+							<div class="center-text">
+								{# <label for="repe"></label>
+								<input type="number" size="2" maxlength="2" id="repe{{ rutina.nombre }}" name="repe" class="form-control" value="{{rutina.repe}}"> #}
+								<button class="btn btn-success" type="button" disabled>
+									<span class="badge">{{rutina.repe}}</span> repeticiones
+								</button>
 							</div>
 				    	{% endif %}
 					    	

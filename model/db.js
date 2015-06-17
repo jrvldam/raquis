@@ -2,6 +2,7 @@ var mdbClient = require('mongodb').MongoClient;
 var async = require('async');
 
 var uri = 'mongodb://admin:admin@ds039321.mongolab.com:39321/raquis_db';
+
 /**
  * Asigna una nueva rutina de un ejercicio al paciente
  * @param {Object}   rutina   Contiene: usuario, ejer, obser, orden, repe y tiempo
